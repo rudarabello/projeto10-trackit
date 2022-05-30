@@ -1,43 +1,45 @@
-import styled from 'styled-components';
+import styled from "styled-components";
+import AccountContext from "../components/AccountContext";
+import { useContext } from "react";
 
-function Header(props) {
-    const {photo} = props
+export default function Top() {
+
+    const { account } = useContext(AccountContext);
+
     return (
         <Container>
-            <Titulo>
-                <h1>TrackIt</h1>
-            </Titulo>
-            <Image>
-                <img src={photo}/>
-            </Image>
+            <p>TrackIt</p>
+            <img src={account.image} alt={account.name} />
         </Container>
-    );
+    )
 }
 
 const Container = styled.div`
-width: 100%;
-height: 70px;
-left: 0px;
-top: 0px;
-position: fixed;
-background-color: #126BA5;
-display: flex;
-justify-content: space-evenly;
-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
-`;
-
-const Titulo = styled.div`
-font-family: 'Playball';
-font-style: normal;
-font-weight: 400;
-font-size: 38.982px;
-line-height: 49px;
-text-align: left;
-
-
-/* identical to box height */
-
-color: #FFFFFF;
-`;
-
-export default Header;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 70px;
+    background-color: #126BA5;
+    box-shadow: 0px 4px 4px 0px #00000026;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4.8vw;
+    box-sizing: border-box;
+    z-index: 1;
+    p {
+        font-family: 'Playball';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 38.982px;
+        line-height: 49px;
+        color: #FFFFFF;
+    }
+    img {
+        width: 51px;
+        height: 51px;
+        border-radius: 50px;
+        object-fit: cover;
+    }
+`

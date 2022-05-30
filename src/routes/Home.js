@@ -1,37 +1,64 @@
 
 import axios from 'axios';
 import styled from 'styled-components';
-import React from "react";
+import { useContext,useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.svg";
+import AccountContext from "../components/AccountContext";
 
 export default function Home() {
 
-  const data = { email, password, };
-  const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const localUser = localStorage.getItem("user");
   const navigate = useNavigate();
-  const promise = axios.post(URL, data);
-  promise.then((res) => {
-    navigate("/Today", res.data);
-  });
+  const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
+ 
+  const { setAccount } = useContext(AccountContext);
+  const [loading, setLoading] = useState(false);
+  const button = load();
 
-  promise.catch((err) => {
-    alert(err.response.data.message);
-  });
+  useEffect(() => {
+    if (localUser !== null) {
+        const localUserParse = JSON.parse(localUser);
+        setEmail(localUserParse.email);
+        setPassword(localUserParse.password);
+    }
+}, []);
 
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
 
-  function handleSubmit(e) {
-    e.preventDefault();
+function submit() {
+  const user = {email,password};
+  const promise = axios.post(URL, user);
+  promise.then(response => GoToToday(response.data));
+  promise.catch(alert("Dados Incorretos! Não fez o cadastro? Entre no link abaixo"))
+};
+
+function load() {
+  if (!loading) {
+      return <p>Entrar</p>;
   }
+}
+
+  function GoToToday(data) {
+    setAccount(data);
+    const user = {
+      email,
+      password
+    };
+    localStorage.removeItem("user");
+    const userStrigify = JSON.stringify(user);
+    localStorage.setItem("user", userStrigify);
+    console.log(data)
+
+    navigate("/Today");
+  };
 
   return (
     <Container>
       <Page>
         <Logo />
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={submit}>
           <Input
             onChange={(e) => {
               setEmail(e.target.value);
@@ -40,6 +67,7 @@ export default function Home() {
             placeholder="email"
             type="email"
             required
+            disabled={loading}
             autoComplete="email"
           />
           <Input
@@ -50,9 +78,10 @@ export default function Home() {
             placeholder="senha"
             type="password"
             required
+            disabled={loading}
             autoComplete="password"
           />
-          <FormButton>Entrar</FormButton>
+          <FormButton  type="submit" disabled={loading} >{button}</FormButton>
         </Form>
         <Link to="/Register">Não tem uma conta? Cadastre-se!</Link>
       </Page>

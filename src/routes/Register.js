@@ -1,32 +1,29 @@
-import React from "react";
+import {useState} from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, } from "react-router-dom";
 import logo from "../assets/logo.svg";
 
 export default function Register() {
+
+
     const navigate = useNavigate();
-    const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up";
-
-    const [email, setEmail] = React.useState("");
-    const [name, setName] = React.useState("");
-    const [password, setPassword] = React.useState("");
-    const [image, setImage] = React.useState("");
-
-    const [disabled, setDisabled] = React.useState(false);
+    const API = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up";
+    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
+    const [password, setPassword] = useState("");
+    const [URL, setURL] = useState("");
 
     function handleSubmit(e) {
         e.preventDefault();
-        setDisabled(true);
-
-        const data = {
+        const register = {
             email,
             name,
-            image,
-            password,
+            image: URL,
+            password
         };
 
-        const promise = axios.post(URL, data);
+        const promise = axios.post(API, register);
 
         promise.then(() => {
             alert("Cadastro concluído com Sucesso!");
@@ -35,7 +32,6 @@ export default function Register() {
 
         promise.catch((err) => {
             alert(err.response.data.message);
-            setDisabled(false);
         });
     }
 
@@ -52,7 +48,6 @@ export default function Register() {
                         placeholder="email"
                         type="email"
                         required
-                        disabled={disabled}
                         autoComplete="email"
                     />
                     <Input
@@ -63,7 +58,6 @@ export default function Register() {
                         placeholder="senha"
                         type="password"
                         required
-                        disabled={disabled}
                         autoComplete="password"
                     />
                     <Input
@@ -74,18 +68,16 @@ export default function Register() {
                         placeholder="nome"
                         type="text"
                         required
-                        disabled={disabled}
                         autoComplete="name"
                     />
                     <Input
                         onChange={(e) => {
-                            setImage(e.target.value);
+                            setURL(e.target.value);
                         }}
-                        value={image}
+                        value={URL}
                         placeholder="foto"
-                        type="text"
+                        type="URL"
                         required
-                        disabled={disabled}
                         autoComplete="image"
                     />
                     <FormButton>Cadastrar</FormButton>
@@ -155,3 +147,4 @@ const FormButton = styled.button`
   border: 1px solid #D5D5D5;
   border-radius: 5px;
 `;
+
