@@ -20,11 +20,13 @@ export default function Historic() {
     const showCalendar = renderCalendar();
     const tempAxiosFunction = useRef();
 
-    
-    const axiosFunction = () => {const config = {headers: {Authorization: `Bearer ${account.token}` } };
-    const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily", config);
-    promise.then(response => setHistory(response.data));
-    promise.catch(() => alert("Erro no servidor!"));}
+
+    const axiosFunction = () => {
+        const config = { headers: { Authorization: `Bearer ${account.token}` } };
+        const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily", config);
+        promise.then(response => setHistory(response.data));
+        promise.catch(() => alert("Erro no servidor. Faça Login novamente."));
+    }
 
 
     tempAxiosFunction.current = axiosFunction;
@@ -81,31 +83,60 @@ export default function Historic() {
     }
 
     return (
-        <Container>
+        <Page>
             <Header />
-            <p>Histórico</p>
-            {showCalendar}
-            {clickedDay}
+            <Content>
+                <Info>
+                    <h4>Meu histórico</h4>
+                </Info>
+                {showCalendar}
+                {clickedDay}
+            </Content>
             <Footer />
-        </Container>
+        </Page>
     )
 }
 
-const Container = styled.div`
-    min-height: 100vh;
-    background-color: #F2F2F2;
-    padding: 70px 4.53vw 105px 4.53vw;
+const Page = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+`;
+
+const Content = styled.div`
+    padding: 90px 4.8vw 25px 4.8vw;
     box-sizing: border-box;
-    font-family: 'Lexend Deca', sans-serif;
-    > p:first-child {
+    background-color: #F2F2F2;
+    min-height: 100vh;
+    
+`;
+
+const Info = styled.div`
+    width: 375px;
+    height: 75px;
+    box-sizing: border-box;
+    padding: 0px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h4{
+        font-family: 'Lexend Deca';
+        font-weight: 400;
+        font-size: 23px;
         color: #126BA5;
-        font-size: 5.87vw;
-        line-height: 7.47vw;
-        font-family: 'Lexend Deca', sans-serif;
-        margin-top: 28px;
-        margin-bottom: 17px;
     }
-`
+    button{
+        width: 40px;
+        height: 35px;
+        background: #52B6FF;
+        border-radius: 4.5px;
+        border: none;
+        font-weight: 400;
+        font-size: 27px;
+        color: #FFFFFF;
+    }
+`;
 
 const ClickedDayHabitsContainer = styled.div`
     background-color: lightsteelblue;
