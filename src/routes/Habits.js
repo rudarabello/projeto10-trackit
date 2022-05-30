@@ -155,6 +155,7 @@ const Page = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 100%;
 `;
 
 const Content = styled.div`
@@ -162,11 +163,12 @@ const Content = styled.div`
     box-sizing: border-box;
     background-color: #F2F2F2;
     min-height: 100vh;
+    width: 100%;
     
 `;
 
 const Info = styled.div`
-    width: 375px;
+    width: 100%;
     height: 75px;
     box-sizing: border-box;
     padding: 0px 18px;

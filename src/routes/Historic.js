@@ -83,7 +83,7 @@ export default function Historic() {
     }
 
     return (
-        <Page>
+        <Container>
             <Header />
             <Content>
                 <Info>
@@ -93,19 +93,20 @@ export default function Historic() {
                 {clickedDay}
             </Content>
             <Footer />
-        </Page>
+        </Container>
     )
 }
 
-const Page = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-`;
+const Container = styled.div`
+    background-color: #F2F2F2;
+    min-height: 100vh;
+    padding: 70px 4.53vw;
+    box-sizing: border-box;
+    font-family: 'Lexend Deca', sans-serif;
+`
 
 const Content = styled.div`
-    padding: 90px 4.8vw 25px 4.8vw;
+    padding:4.8vw 25px 4.8vw;
     box-sizing: border-box;
     background-color: #F2F2F2;
     min-height: 100vh;
@@ -141,7 +142,7 @@ const Info = styled.div`
 const ClickedDayHabitsContainer = styled.div`
     background-color: lightsteelblue;
     margin-top: 20px;
-    width: 91vw;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;

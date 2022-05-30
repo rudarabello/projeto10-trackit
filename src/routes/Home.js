@@ -120,6 +120,7 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 6px;
+  margin: 3rem;
   margin-bottom: 25px;
 `;
 
