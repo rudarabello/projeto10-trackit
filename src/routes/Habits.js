@@ -1,6 +1,6 @@
 
 import styled from "styled-components";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import Header from "../components/Header";
@@ -16,58 +16,58 @@ export default function Habits() {
     const [habits, setHabits] = useState([]);
     const [addHabit, setAddHabit] = useState("none");
     const [loading, setLoading] = useState(false);
-    const [newHabit, setNewHabit] = useState({
-        name: "",
-        days: []
-    });
+    const [newHabit, setNewHabit] = useState({ name: "", days: [] });
     const [opacit, setOpacit] = useState(1);
     const [inputBackgroundColor, setInputBackgroundColor] = useState("#FFFFFF");
     const { setPorcentageHabitsDoneToday } = useContext(PorcentageHabitsDoneToday);
-    const { todayHabits, setTodayHabits } = useContext(HabitsToday);
-
+    const { todayHabits } = useContext(HabitsToday);
     const weekdays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
     const showLoading = insideSaveHabit();
     const MyHabits = renderHabits();
     const makeHabit = renderNewHabit();
-    const config = {
-        headers: {
-            Authorization: `Bearer ${account.token}`
-        }
-    };
-
-    useEffect(() => {
+    const config = {headers: { Authorization: `Bearer ${account.token}`}};
+    const tempAxiosFunction = useRef();
+    const tempAxios2Function = useRef();
+    const axiosFunction = () => {
         const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config);
         promise.then(response => setHabits(response.data));
-        promise.catch(() => alert(`Deu erro no servidor!`));
-
-    }, [habits]);
-
-    useEffect(() => {
-        const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config);
-        promise.then(response => setTodayHabits(response.data));
-    }, [habits]);
-
-    useEffect(() => {
+        promise.catch(() => alert(`Deu erro no servidor!`));}
+    const axios2Function = () => {
         if (todayHabits.length) {
             setPorcentageHabitsDoneToday(todayHabits.filter(habit => habit.done === true).length / todayHabits.length);
         } else {
             setPorcentageHabitsDoneToday(0);
-        }
+        }}
+
+    tempAxiosFunction.current = axiosFunction;
+    tempAxios2Function.current = axios2Function;
+
+    useEffect(() => {
+        tempAxiosFunction.current();
+    }, [habits]);
+
+
+    useEffect(() => {
+        tempAxios2Function.current();
     }, [habits]);
 
     function renderHabits() {
         if (habits.length > 0) {
             return habits.map((habit, i) => <CreateHabit key={i} habit={habit} />);
+        } else {
+            return <Text>
+                Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!
+            </Text>
         }
-        return <Text>
-            Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!
-        </Text>
+
     }
 
     function renderNewHabit() {
-        if (addHabit === "none") return <></>;
-        else {
-            return <NewHabit display={addHabit} opacit={opacit} inputBackgroundColor={inputBackgroundColor} >
+        if (addHabit === "none") {
+            return <></>;
+        } else {
+            return <NewHabit
+                display={addHabit} opacit={opacit} inputBackgroundColor={inputBackgroundColor} >
                 <input
                     value={newHabit.name}
                     onChange={(e) => setNewHabit({ ...newHabit, name: e.target.value })} placeholder="nome do hábito"

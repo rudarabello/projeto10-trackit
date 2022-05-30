@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 import styled from 'styled-components';
-import { useContext,useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.svg";
 import AccountContext from "../components/AccountContext";
@@ -12,47 +12,51 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const localUser = localStorage.getItem("user");
   const navigate = useNavigate();
-  const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
- 
   const { setAccount } = useContext(AccountContext);
-  const [loading, setLoading] = useState(false);
-  const button = load();
+  const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
+  const tempAxiosFunction = useRef();
+  const axiosFunction = () => {
+    if (localUser !== null) {
+      const localUserParse = JSON.parse(localUser);
+      setEmail(localUserParse.email);
+      setPassword(localUserParse.password);
+    }
+  }
+
+  tempAxiosFunction.current = axiosFunction;
 
   useEffect(() => {
-    if (localUser !== null) {
-        const localUserParse = JSON.parse(localUser);
-        setEmail(localUserParse.email);
-        setPassword(localUserParse.password);
+    tempAxiosFunction.current();
+  }, []);
+
+  function submit(e) {
+    e.preventDefault();
+    const user = {
+      email,
+      password
     }
-}, []);
-
-
-function submit() {
-  const user = {email,password};
-  const promise = axios.post(URL, user);
-  promise.then(response => GoToToday(response.data));
-  promise.catch(alert("Dados Incorretos! Não fez o cadastro? Entre no link abaixo"))
-};
-
-function load() {
-  if (!loading) {
-      return <p>Entrar</p>;
+    const promise = axios.post(URL, user);
+    promise.then(response => GoToToday(response.data));
+    promise.catch(() => error());
   }
-}
 
   function GoToToday(data) {
     setAccount(data);
     const user = {
       email,
       password
-    };
+    }
     localStorage.removeItem("user");
     const userStrigify = JSON.stringify(user);
     localStorage.setItem("user", userStrigify);
-    console.log(data)
-
     navigate("/Today");
-  };
+  }
+
+  function error() {
+    setEmail("");
+    setPassword("");
+    alert("Dados Incorretos! Não fez o cadastro? Entre no link abaixo");
+  }
 
   return (
     <Container>
@@ -67,7 +71,6 @@ function load() {
             placeholder="email"
             type="email"
             required
-            disabled={loading}
             autoComplete="email"
           />
           <Input
@@ -78,10 +81,9 @@ function load() {
             placeholder="senha"
             type="password"
             required
-            disabled={loading}
             autoComplete="password"
           />
-          <FormButton  type="submit" disabled={loading} >{button}</FormButton>
+          <FormButton type="submit">Entrar</FormButton>
         </Form>
         <Link to="/Register">Não tem uma conta? Cadastre-se!</Link>
       </Page>

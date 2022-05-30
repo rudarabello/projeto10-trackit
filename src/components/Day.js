@@ -1,33 +1,38 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
-export default function Day({ index, day, newHabit, setNewHabit, loading }) {
+export default function Day({ index, day, newHabit, setNewHabit }) {
 
     const [textColor, setTextColor] = useState("#DBDBDB");
     const [backgroundColor, setBackgroundColor] = useState("#FFFFFF");
+    const NewHabitFunction = () => {
+        if (newHabit.days.filter(i => i === index).length) {
+            setTextColor("#FFFFFF");
+            setBackgroundColor("#CFCFCF");
+        }
+    }
+    const tempNewHabitFunc = useRef();
+    tempNewHabitFunc.current = NewHabitFunction
 
     useEffect(() => {
-     if (newHabit.days.filter(i => i === index).length) {
-        setTextColor("#FFFFFF");
-        setBackgroundColor("#CFCFCF");
-     }   
+        tempNewHabitFunc()
     }, []);
 
     function selected() {
         if (newHabit.days.filter(i => i === index).length) {
-            setNewHabit({...newHabit, days: newHabit.days.filter(i => i !== index)});
+            setNewHabit({ ...newHabit, days: newHabit.days.filter(i => i !== index) });
             setTextColor("#DBDBDB");
             setBackgroundColor("#FFFFFF");
         } else {
-            setNewHabit({...newHabit, days: [...newHabit.days, index].sort()});
+            setNewHabit({ ...newHabit, days: [...newHabit.days, index].sort() });
             setTextColor("#FFFFFF");
             setBackgroundColor("#CFCFCF");
         }
-        
+
     }
 
     return (
-        <Container textColor={textColor} backgroundColor={backgroundColor} onClick={selected} disabled={loading}>
+        <Container textColor={textColor} backgroundColor={backgroundColor} onClick={selected}>
             {day[0]}
         </Container>
     );

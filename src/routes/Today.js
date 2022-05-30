@@ -1,7 +1,7 @@
 
 import styled from "styled-components";
 import Header from "../components/Header";
-import { useEffect, useContext, } from "react";
+import { useEffect, useContext,useRef } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
 import AccountContext from "../components/AccountContext";
@@ -20,6 +20,29 @@ export default function Today() {
     const updateLocale = require('dayjs/plugin/updateLocale');
     const descripition = habitsDone();
     const listTodayHabits = render();
+    const tempAxiosFunction = useRef();
+    const tempAxios2Function = useRef();
+    const axiosFunction = () => {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${account.token}`
+            }
+        };
+        const promise = axios.get(
+            "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today"
+            , config
+        );
+        promise.then(response => setTodayHabits(response.data));
+    }
+    const axios2Function = () => {
+        if (todayHabits.length) {
+            setPorcentageHabitsDoneToday(todayHabits.filter
+                (habit => habit.done === true)
+                .length / todayHabits.length);
+        } else {
+            setPorcentageHabitsDoneToday(0);
+        }
+    }
 
     dayjs.extend(utc);
     dayjs.extend(updateLocale);
@@ -31,29 +54,16 @@ export default function Today() {
     });
 
     const date = dayjs.utc().local();
+    tempAxiosFunction.current = axiosFunction;
+    tempAxios2Function.current = axios2Function;
 
     useEffect(() => {
-        const config = {
-            headers: {
-                Authorization: `Bearer ${account.token}`
-            }
-        };
-        const promise = axios.get(
-            "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today"
-            , config
-        );
-        promise.then(response => setTodayHabits(response.data));
-    }, [todayHabits]);
+        tempAxiosFunction.current();
+        }, [todayHabits]);
 
     useEffect(() => {
-        if (todayHabits.length) {
-            setPorcentageHabitsDoneToday(todayHabits.filter
-                (habit => habit.done === true)
-                .length / todayHabits.length);
-        } else {
-            setPorcentageHabitsDoneToday(0);
-        }
-    }, [todayHabits]);
+        tempAxios2Function.current();
+        }, [todayHabits]);
 
 
     function habitsDone() {

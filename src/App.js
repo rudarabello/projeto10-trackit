@@ -6,7 +6,7 @@ import Habits from "./routes/Habits";
 import Today from "./routes/Today";
 import Historic from "./routes/Historic";
 import Header from "./components/Header";
-import Menu from "./components/Menu";
+import Footer from "./components/Footer";
 import AccountContext from "./components/AccountContext";
 import PorcentageHabitsDoneToday from "./components/PorcentageHabitsDoneToday";
 import HabitsToday from "./components/HabitsToday";
@@ -26,7 +26,7 @@ export default function App() {
     const [todayHabits, setTodayHabits] = useState([]);
 
 
-    const showMenu = menu();
+    const showFooter = footer();
     const showTop = top();
 
     function top() {
@@ -34,9 +34,9 @@ export default function App() {
         return <Header></Header>;
     }
 
-    function menu() {
+    function footer() {
         if (account.token)
-        return <Menu></Menu>;
+        return <Footer></Footer>;
     }
 
     return (
@@ -52,7 +52,7 @@ export default function App() {
                             <Route path="/Today" element={<Today />} />
                             <Route path="/Historic" element={<Historic />} />
                         </Routes>
-                        {showMenu}
+                        {showFooter}
                     </BrowserRouter>
                 </HabitsToday.Provider>
             </PorcentageHabitsDoneToday.Provider>
