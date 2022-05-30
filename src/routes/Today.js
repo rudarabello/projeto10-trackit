@@ -1,6 +1,7 @@
 
 import styled from "styled-components";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 import { useEffect, useContext,useRef } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -104,6 +105,7 @@ export default function Today() {
                 {descripition}
             </TodaysDescription>
             {listTodayHabits}
+            <Footer />
         </Container>
     )
 }

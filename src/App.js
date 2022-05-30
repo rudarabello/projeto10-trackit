@@ -5,8 +5,6 @@ import Register from "./routes/Register";
 import Habits from "./routes/Habits";
 import Today from "./routes/Today";
 import Historic from "./routes/Historic";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
 import AccountContext from "./components/AccountContext";
 import PorcentageHabitsDoneToday from "./components/PorcentageHabitsDoneToday";
 import HabitsToday from "./components/HabitsToday";
@@ -26,25 +24,13 @@ export default function App() {
     const [todayHabits, setTodayHabits] = useState([]);
 
 
-    const showFooter = footer();
-    const showTop = top();
 
-    function top() {
-        if (account.token)
-        return <Header></Header>;
-    }
-
-    function footer() {
-        if (account.token)
-        return <Footer></Footer>;
-    }
 
     return (
         <AccountContext.Provider value={{ account, setAccount }}>
             <PorcentageHabitsDoneToday.Provider value={{ porcentageHabitsDoneToday, setPorcentageHabitsDoneToday }}>
                 <HabitsToday.Provider value={{ todayHabits, setTodayHabits }}>
                     <BrowserRouter>
-                        {showTop}
                         <Routes>
                             <Route path="/" element={<Home />} />
                             <Route path="/Register" element={<Register />} />
@@ -52,7 +38,6 @@ export default function App() {
                             <Route path="/Today" element={<Today />} />
                             <Route path="/Historic" element={<Historic />} />
                         </Routes>
-                        {showFooter}
                     </BrowserRouter>
                 </HabitsToday.Provider>
             </PorcentageHabitsDoneToday.Provider>

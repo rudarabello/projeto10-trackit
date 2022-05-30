@@ -4,6 +4,7 @@ import { useEffect, useState, useContext, useRef } from "react";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 import CreateHabit from "../components/CreateHabit";
 import Day from "../components/Day";
 import HabitsToday from "../components/HabitsToday";
@@ -143,6 +144,7 @@ export default function Habits() {
                     {MyHabits}
                 </HabitList>
             </Content>
+            <Footer />
         </Page>
     );
 
