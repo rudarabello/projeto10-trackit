@@ -15,7 +15,7 @@ export default function Day({ index, day, newHabit, setNewHabit }) {
     tempNewHabitFunc.current = NewHabitFunction
 
     useEffect(() => {
-        tempNewHabitFunc()
+        tempNewHabitFunc.current();
     }, []);
 
     function selected() {
